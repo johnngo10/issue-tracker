@@ -173,7 +173,6 @@ module.exports = function (app) {
     })
 
     .put(function (req, res) {
-      let { project } = req.params;
       const fieldArray = [
         'issue_title',
         'issue_text',
@@ -183,7 +182,6 @@ module.exports = function (app) {
         'status_text',
       ];
       let {
-        _id,
         issue_title,
         issue_text,
         created_by,
@@ -191,36 +189,38 @@ module.exports = function (app) {
         open,
         status_text,
       } = req.body;
+      let { _id } = req.body;
       let source = req.body;
-      let fieldFilter = fieldArray.filter(
+      let fieldFilter;
+      // Filter fields that contains a value
+
+      fieldFilter = fieldArray.filter(
         field => source[field] !== '' && source[field] !== undefined
       );
 
-      // turn array of strings into an object
+      if (_id === '') {
+        res.json({ error: 'missing _id' });
+      } else if (fieldFilter.length < 1) {
+        res.json({ error: 'empty field' });
+      } else {
+        // Format into objects
+        let obj = Object.assign(
+          ...fieldFilter.map(field => ({ [field]: source[field] }))
+        );
+        // Add 'updated_on' object
+        obj['updated_on'] = new Date();
 
-      console.log(req.body);
-      console.log(fieldFilter);
-
-      Issue.findOneAndUpdate(
-        { _id },
-        {
-          issue_title,
-          issue_text,
-          created_by,
-          assigned_to,
-          open,
-          status_text,
-        },
-        function (err, data) {
+        Issue.findOneAndUpdate({ _id }, obj, function (err, data) {
           if (!data) {
-            res.json({ error: 'Issue does not exist' });
+            res.json({ error: 'could not update', _id });
           } else {
-            console.log(data);
+            res.json({
+              result: 'successfully updated',
+              _id,
+            });
           }
-        }
-      );
-
-      // console.log(req.body);
+        });
+      }
     })
 
     .delete(function (req, res) {
