@@ -128,7 +128,8 @@ module.exports = function (app) {
             created_on: result.created_on,
             updated_on: result.updated_on,
             assigned_to: result.assigned_to,
-            status_text: status_text,
+            status_text: result.status_text,
+            open: result.open,
           });
         })
         .catch(err => {

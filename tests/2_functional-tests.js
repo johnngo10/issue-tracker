@@ -32,6 +32,11 @@ suite('Functional Tests', function () {
           assert.equal(res.body.created_by, 'John');
           assert.equal(res.body.assigned_to, 'Joe');
           assert.equal(res.body.status_text, 'In QA');
+          assert.property(res.body, 'created_on');
+          assert.property(res.body, 'updated_on');
+          assert.property(res.body, 'open');
+
+          _id = res.body._id;
           done();
         });
     });
@@ -55,8 +60,12 @@ suite('Functional Tests', function () {
             'When we post data it has an error.'
           );
           assert.equal(res.body.created_by, 'Joe');
-          assert.equal(res.body.assigned_to, undefined);
-          assert.equal(res.body.status_text, undefined);
+          assert.equal(res.body.assigned_to, '');
+          assert.equal(res.body.status_text, '');
+          assert.equal(res.body.open, true);
+          assert.property(res.body, '_id');
+          assert.property(res.body, 'created_on');
+          assert.property(res.body, 'updated_on');
           done();
         });
     });
@@ -96,7 +105,7 @@ suite('Functional Tests', function () {
           assert.property(res.body[0], 'assigned_to');
           assert.property(res.body[0], 'open');
           assert.property(res.body[0], 'status_text');
-          _id = res.body[0]._id;
+
           done();
         });
     });
