@@ -132,44 +132,10 @@ module.exports = function (app) {
           });
         })
         .catch(err => {
-          res.json({
+          res.status(400).send({
             error: 'required field(s) missing',
           });
         });
-
-      // let issue = {
-      //   issue_title,
-      //   issue_text,
-      //   created_by,
-      //   assigned_to,
-      //   status_text,
-      // };
-
-      // Issue.findOneAndUpdate(
-      //   { project },
-      //   { $push: { issues: issue } },
-      //   function (err, data) {
-      //     if (!data) {
-      //       const record = new Issue({
-      //         project: project,
-      //         issues: [issue],
-      //       });
-
-      //       record
-      //         .save()
-      //         .then(result => {
-      //           res.json(result.issues);
-      //         })
-      //         .catch(err => {
-      //           res.json({
-      //             error: 'required field(s) missing',
-      //           });
-      //         });
-      //     } else {
-      //       res.json(data.issues);
-      //     }
-      //   }
-      // );
     })
 
     .put(function (req, res) {
@@ -181,38 +147,29 @@ module.exports = function (app) {
         'open',
         'status_text',
       ];
-      let {
-        issue_title,
-        issue_text,
-        created_by,
-        assigned_to,
-        open,
-        status_text,
-      } = req.body;
       let { _id } = req.body;
       let source = req.body;
       let fieldFilter;
       // Filter fields that contains a value
-
       fieldFilter = fieldArray.filter(
         field => source[field] !== '' && source[field] !== undefined
       );
 
-      if (_id === '') {
-        res.json({ error: 'missing _id' });
+      if (!_id) {
+        res.status(400).send({ error: 'missing _id' });
       } else if (fieldFilter.length < 1) {
-        res.json({ error: 'empty field' });
+        res.status(400).send({ error: 'no update fields(s) sent', _id });
       } else {
         // Format into objects
         let obj = Object.assign(
           ...fieldFilter.map(field => ({ [field]: source[field] }))
         );
-        // Add 'updated_on' object
+        // Add 'updated_on' property to object
         obj['updated_on'] = new Date();
 
         Issue.findOneAndUpdate({ _id }, obj, function (err, data) {
-          if (!data) {
-            res.json({ error: 'could not update', _id });
+          if (err) {
+            res.status(400).send({ error: 'could not update', _id });
           } else {
             res.json({
               result: 'successfully updated',
@@ -224,6 +181,26 @@ module.exports = function (app) {
     })
 
     .delete(function (req, res) {
-      let project = req.params.project;
+      let { _id } = req.body;
+
+      if (!_id) {
+        res.status(400).send({
+          error: 'missing _id',
+        });
+      } else {
+        Issue.findByIdAndRemove(_id, function (err, data) {
+          if (err) {
+            res.status(400).send({
+              error: 'could not delete',
+              _id,
+            });
+          } else {
+            res.json({
+              result: 'successfully deleted',
+              _id,
+            });
+          }
+        });
+      }
     });
 };
