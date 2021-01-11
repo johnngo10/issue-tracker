@@ -185,18 +185,18 @@ module.exports = function (app) {
       let { _id } = req.body;
 
       if (!_id) {
-        res.send({
+        res.status(200).send({
           error: 'missing _id',
         });
       } else {
         Issue.findByIdAndRemove(_id, function (err, data) {
           if (err) {
-            res.json({
+            res.status(200).json({
               error: 'could not delete',
               _id,
             });
           } else {
-            res.send({
+            res.status(200).send({
               result: 'successfully deleted',
               _id,
             });
