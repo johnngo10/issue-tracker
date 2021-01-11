@@ -157,7 +157,7 @@ module.exports = function (app) {
       );
 
       if (!_id) {
-        res.status(400).send({ error: 'missing _id' });
+        res.status(500).send('missing _id');
       } else if (fieldFilter.length < 1) {
         res.status(400).send({ error: 'no update fields(s) sent', _id });
       } else {
