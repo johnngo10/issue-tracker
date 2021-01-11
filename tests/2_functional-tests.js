@@ -218,10 +218,14 @@ suite('Functional Tests', function () {
       chai
         .request(server)
         .put('/api/issues/test')
-        .send({ _id: '3dw3', assigned_to: 'Kevin', status_text: 'Test' })
+        .send({ _id: '3awd3', assigned_to: 'Kevin', status_text: 'Test' })
         .end(function (err, res) {
+          let falseId = res.body._id;
           assert.equal(res.status, 200);
-          assert.equal(res.text, `{"error":"could not update","_id":"3dw3"}`);
+          assert.equal(
+            res.text,
+            `{"error":"could not update","_id":"${falseId}"}`
+          );
           done();
         });
     });
@@ -234,8 +238,12 @@ suite('Functional Tests', function () {
         .delete('/api/issues/test')
         .send({ _id: '3asd3' })
         .end(function (err, res) {
+          let falseId = res.body._id;
           assert.equal(res.status, 200);
-          assert.equal(res.text, `{"error":"could not delete","_id":"3asd3"}`);
+          assert.equal(
+            res.text,
+            `{"error":"could not delete","_id":"${falseId}"}`
+          );
           done();
         });
     });
