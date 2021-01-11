@@ -159,7 +159,7 @@ module.exports = function (app) {
       if (!_id) {
         res.json({ error: 'missing _id' });
       } else if (fieldFilter.length < 1) {
-        res.json({ error: 'no update fields(s) sent', _id });
+        res.json({ error: 'no update field(s) sent', _id });
       } else {
         // Format into objects
         let obj = Object.assign(

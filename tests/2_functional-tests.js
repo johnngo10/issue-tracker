@@ -208,7 +208,7 @@ suite('Functional Tests', function () {
           assert.equal(res.status, 200);
           assert.equal(
             res.text,
-            `{"error":"no update fields(s) sent","_id":"${_id}"}`
+            `{"error":"no update field(s) sent","_id":"${_id}"}`
           );
           done();
         });
