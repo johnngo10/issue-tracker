@@ -133,7 +133,7 @@ module.exports = function (app) {
           });
         })
         .catch(err => {
-          res.status(400).send({
+          res.json({
             error: 'required field(s) missing',
           });
         });
@@ -185,13 +185,13 @@ module.exports = function (app) {
       let { _id } = req.body;
 
       if (!_id) {
-        res.status(400).send({
+        res.json({
           error: 'missing _id',
         });
       } else {
         Issue.findByIdAndRemove(_id, function (err, data) {
           if (err) {
-            res.status(400).send({
+            res.json({
               error: 'could not delete',
               _id,
             });

@@ -80,7 +80,7 @@ suite('Functional Tests', function () {
           assigned_to: 'Joe',
         })
         .end(function (err, res) {
-          assert.equal(res.status, 400);
+          assert.equal(res.status, 200);
           assert.equal(res.text, '{"error":"required field(s) missing"}');
           done();
         });
@@ -234,7 +234,7 @@ suite('Functional Tests', function () {
         .delete('/api/issues/test')
         .send({ _id: '3asd3' })
         .end(function (err, res) {
-          assert.equal(res.status, 400);
+          assert.equal(res.status, 200);
           assert.equal(res.text, `{"error":"could not delete","_id":"3asd3"}`);
           done();
         });
@@ -246,7 +246,7 @@ suite('Functional Tests', function () {
         .delete('/api/issues/test')
         .send({})
         .end(function (err, res) {
-          assert.equal(res.status, 400);
+          assert.equal(res.status, 200);
           assert.equal(res.text, `{"error":"missing _id"}`);
           done();
         });
