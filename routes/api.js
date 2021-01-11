@@ -161,20 +161,26 @@ module.exports = function (app) {
       } else if (fieldFilter.length < 1) {
         res.send({ error: 'no update field(s) sent', _id });
       } else {
-        // Format into objects
-        let obj = Object.assign(
-          ...fieldFilter.map(field => ({ [field]: source[field] }))
-        );
-        // Add 'updated_on' property to object
-        obj['updated_on'] = new Date();
-
-        Issue.findOneAndUpdate({ _id }, obj, function (err, data) {
-          if (err) {
-            res.send({ error: 'could not update', _id });
+        Issue.findOne({ _id }, function (err, data) {
+          if (!data) {
+            res.json({ error: 'could not update', _id });
           } else {
-            res.json({
-              result: 'successfully updated',
-              _id,
+            // Format into objects
+            let obj = Object.assign(
+              ...fieldFilter.map(field => ({ [field]: source[field] }))
+            );
+            // Add 'updated_on' property to object
+            obj['updated_on'] = new Date();
+
+            Issue.findOneAndUpdate({ _id }, obj, function (err, data) {
+              if (err) {
+                res.send({ error: 'could not update', _id });
+              } else {
+                res.json({
+                  result: 'successfully updated',
+                  _id,
+                });
+              }
             });
           }
         });
@@ -189,16 +195,22 @@ module.exports = function (app) {
           error: 'missing _id',
         });
       } else {
-        Issue.findByIdAndRemove(_id, function (err, data) {
-          if (err) {
-            return res.json({
-              error: 'could not delete',
-              _id,
-            });
+        Issue.findOne({ _id }, function (err, data) {
+          if (!data) {
+            res.json({ error: 'could not delete', _id });
           } else {
-            return res.json({
-              result: 'successfully deleted',
-              _id,
+            Issue.findByIdAndRemove(_id, function (err, data) {
+              if (err) {
+                return res.json({
+                  error: 'could not delete',
+                  _id,
+                });
+              } else {
+                return res.json({
+                  result: 'successfully deleted',
+                  _id,
+                });
+              }
             });
           }
         });
