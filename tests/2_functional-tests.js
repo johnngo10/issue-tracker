@@ -193,7 +193,7 @@ suite('Functional Tests', function () {
         .put('/api/issues/test')
         .send({ assigned_to: 'Kevin', status_text: 'Test' })
         .end(function (err, res) {
-          assert.equal(res.status, 400);
+          assert.equal(res.status, 200);
           assert.equal(res.text, '{"error":"missing _id"}');
           done();
         });
@@ -205,7 +205,7 @@ suite('Functional Tests', function () {
         .put('/api/issues/test')
         .send({ _id: _id })
         .end(function (err, res) {
-          assert.equal(res.status, 400);
+          assert.equal(res.status, 200);
           assert.equal(
             res.text,
             `{"error":"no update fields(s) sent","_id":"${_id}"}`
@@ -220,7 +220,7 @@ suite('Functional Tests', function () {
         .put('/api/issues/test')
         .send({ _id: '3dw3', assigned_to: 'Kevin', status_text: 'Test' })
         .end(function (err, res) {
-          assert.equal(res.status, 400);
+          assert.equal(res.status, 200);
           assert.equal(res.text, `{"error":"could not update","_id":"3dw3"}`);
           done();
         });
