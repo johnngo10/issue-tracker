@@ -157,9 +157,9 @@ module.exports = function (app) {
       );
 
       if (!_id) {
-        res.status(500).send('missing _id');
+        res.status(400).json({ error: 'missing _id' });
       } else if (fieldFilter.length < 1) {
-        res.status(400).send({ error: 'no update fields(s) sent', _id });
+        res.status(400).json({ error: 'no update fields(s) sent', _id });
       } else {
         // Format into objects
         let obj = Object.assign(
@@ -170,7 +170,7 @@ module.exports = function (app) {
 
         Issue.findOneAndUpdate({ _id }, obj, function (err, data) {
           if (err) {
-            res.status(400).send({ error: 'could not update', _id });
+            res.status(400).json({ error: 'could not update', _id });
           } else {
             res.json({
               result: 'successfully updated',

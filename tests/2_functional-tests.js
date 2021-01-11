@@ -193,8 +193,8 @@ suite('Functional Tests', function () {
         .put('/api/issues/test')
         .send({ assigned_to: 'Kevin', status_text: 'Test' })
         .end(function (err, res) {
-          assert.equal(res.status, 500);
-          assert.equal(res.text, 'missing _id');
+          assert.equal(res.status, 400);
+          assert.equal(res.text, '{"error":"missing _id"}');
           done();
         });
     });
