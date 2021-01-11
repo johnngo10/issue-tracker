@@ -185,7 +185,7 @@ module.exports = function (app) {
       let { _id } = req.body;
 
       if (!_id) {
-        res.status(200).send({
+        res.status(200).json({
           error: 'missing _id',
         });
       } else {
@@ -196,7 +196,7 @@ module.exports = function (app) {
               _id,
             });
           } else {
-            res.status(200).send({
+            res.status(200).json({
               result: 'successfully deleted',
               _id,
             });
