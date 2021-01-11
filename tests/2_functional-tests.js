@@ -232,6 +232,21 @@ suite('Functional Tests', function () {
   });
 
   suite('DELETE /api/issues/{project} => updated issue objects', function () {
+    test('delete issue', function (done) {
+      chai
+        .request(server)
+        .delete('/api/issues/test')
+        .send({ _id: _id })
+        .end(function (err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(
+            res.text,
+            `{"result":"successfully deleted","_id":"${_id}"}`
+          );
+          done();
+        });
+    });
+
     test('delete with invalid id', function (done) {
       chai
         .request(server)
@@ -256,21 +271,6 @@ suite('Functional Tests', function () {
         .end(function (err, res) {
           assert.equal(res.status, 200);
           assert.equal(res.text, `{"error":"missing _id"}`);
-          done();
-        });
-    });
-
-    test('delete issue', function (done) {
-      chai
-        .request(server)
-        .delete('/api/issues/test')
-        .send({ _id: _id })
-        .end(function (err, res) {
-          assert.equal(res.status, 200);
-          assert.equal(
-            res.text,
-            `{"result":"successfully deleted","_id":"${_id}"}`
-          );
           done();
         });
     });

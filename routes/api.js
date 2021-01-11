@@ -185,7 +185,7 @@ module.exports = function (app) {
       let { _id } = req.body;
 
       if (!_id) {
-        res.json({
+        res.send({
           error: 'missing _id',
         });
       } else {
